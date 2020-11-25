@@ -1,6 +1,6 @@
 package com.example.floristics_app
 
-import android.R.attr.data
+import android.content.ContentValues
 import android.content.Intent
 import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
@@ -60,34 +60,38 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
         if (result != null) {
             if (result.contents != null) {
-                var product = ""
+                var plant = ""
                 code = (result.contents).toString()
+
+                var cursor = mDb!!.rawQuery("SELECT code FROM plant WHERE text ='" + code + "'", null)
+                cursor.moveToFirst()
+                code = cursor.getString(0)
+
                 setContentView(R.layout.plant)
-                var cursor = mDb!!.rawQuery("SELECT * FROM light where _id =" + code[0].toString() + "", null)
+                cursor = mDb!!.rawQuery("SELECT * FROM light where _id =" + code[0].toString() + "", null)
                 cursor.moveToFirst()
-                product = cursor.getString(1)
-                findViewById<TextView>(R.id.light).setText(product);
+                plant = cursor.getString(1)
+                findViewById<TextView>(R.id.light).setText(plant);
 
-                cursor = mDb!!.rawQuery("SELECT * FROM max_temp where _id =" + code[1].toString() + "", null)
+                cursor = mDb!!.rawQuery("SELECT * FROM min_temp where _id =" + code[1].toString() + "", null)
                 cursor.moveToFirst()
-                product = cursor.getString(1)
-                findViewById<TextView>(R.id.max_temp).setText(product);
+                plant = cursor.getString(1)
+                findViewById<TextView>(R.id.min_temp).setText(plant);
 
-                cursor = mDb!!.rawQuery("SELECT * FROM min_temp where _id =" + code[2].toString() + "", null)
+                cursor = mDb!!.rawQuery("SELECT * FROM max_temp where _id =" + code[2].toString() + "", null)
                 cursor.moveToFirst()
-                product = cursor.getString(1)
-                findViewById<TextView>(R.id.min_temp).setText(product);
+                plant = cursor.getString(1)
+                findViewById<TextView>(R.id.max_temp).setText(plant);
 
                 cursor = mDb!!.rawQuery("SELECT * FROM mode where _id =" + code[3].toString() + "", null)
                 cursor.moveToFirst()
-                product = cursor.getString(1)
-                findViewById<TextView>(R.id.mode).setText(product);
+                plant = cursor.getString(1)
+                findViewById<TextView>(R.id.mode).setText(plant);
 
                 cursor = mDb!!.rawQuery("SELECT * FROM water where _id =" + code[4].toString() + "", null)
                 cursor.moveToFirst()
-                product = cursor.getString(1)
-                findViewById<TextView>(R.id.water).setText(product);
-
+                plant = cursor.getString(1)
+                findViewById<TextView>(R.id.water).setText(plant);
                 cursor.close()
             } else {
                 Toast.makeText(this, "No Results", Toast.LENGTH_LONG).show()
@@ -101,7 +105,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(R.layout.add_plant)
         var cursor = mDb!!.rawQuery("SELECT COUNT(*) FROM light", null)
         cursor.moveToFirst()
-        val data = arrayOfNulls<String>(cursor.getInt(0))
+        var data = arrayOfNulls<String>(cursor.getInt(0))
         cursor = mDb!!.rawQuery("SELECT text FROM light", null)
         cursor.moveToFirst()
         var i = 0
@@ -111,9 +115,103 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             cursor.moveToNext()
         }
         cursor.close()
-        val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, data)
+        var adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, data)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        val spinner = findViewById<View>(R.id.spinner_light) as Spinner
+        var spinner = findViewById<View>(R.id.spinner_light) as Spinner
         spinner.adapter = adapter
+
+        cursor = mDb!!.rawQuery("SELECT COUNT(*) FROM min_temp", null)
+        cursor.moveToFirst()
+        data = arrayOfNulls<String>(cursor.getInt(0))
+        cursor = mDb!!.rawQuery("SELECT text FROM min_temp", null)
+        cursor.moveToFirst()
+        i = 0
+        while (!cursor.isAfterLast) {
+            data[i] = cursor.getString(0)
+            i++
+            cursor.moveToNext()
+        }
+        cursor.close()
+        adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, data)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner = findViewById<View>(R.id.spinner_min_temp) as Spinner
+        spinner.adapter = adapter
+
+        cursor = mDb!!.rawQuery("SELECT COUNT(*) FROM max_temp", null)
+        cursor.moveToFirst()
+        data = arrayOfNulls<String>(cursor.getInt(0))
+        cursor = mDb!!.rawQuery("SELECT text FROM max_temp", null)
+        cursor.moveToFirst()
+        i = 0
+        while (!cursor.isAfterLast) {
+            data[i] = cursor.getString(0)
+            i++
+            cursor.moveToNext()
+        }
+        cursor.close()
+        adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, data)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner = findViewById<View>(R.id.spinner_max_temp) as Spinner
+        spinner.adapter = adapter
+
+        cursor = mDb!!.rawQuery("SELECT COUNT(*) FROM mode", null)
+        cursor.moveToFirst()
+        data = arrayOfNulls<String>(cursor.getInt(0))
+        cursor = mDb!!.rawQuery("SELECT text FROM mode", null)
+        cursor.moveToFirst()
+        i = 0
+        while (!cursor.isAfterLast) {
+            data[i] = cursor.getString(0)
+            i++
+            cursor.moveToNext()
+        }
+        cursor.close()
+
+        adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, data)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner = findViewById<View>(R.id.spinner_mode) as Spinner
+        spinner.adapter = adapter
+
+        cursor = mDb!!.rawQuery("SELECT COUNT(*) FROM water", null)
+        cursor.moveToFirst()
+        data = arrayOfNulls<String>(cursor.getInt(0))
+        cursor = mDb!!.rawQuery("SELECT text FROM water", null)
+        cursor.moveToFirst()
+        i = 0
+        while (!cursor.isAfterLast) {
+            data[i] = cursor.getString(0)
+            i++
+            cursor.moveToNext()
+        }
+        cursor.close()
+        adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, data)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner = findViewById<View>(R.id.spinner_water) as Spinner
+        spinner.adapter = adapter
+    }
+
+
+
+    fun add(view: View){
+        var check = ""
+        check += (findViewById<Spinner>(R.id.spinner_light).selectedItemPosition + 1).toString()
+        check += (findViewById<Spinner>(R.id.spinner_min_temp).selectedItemPosition + 1).toString()
+        check += (findViewById<Spinner>(R.id.spinner_max_temp).selectedItemPosition + 1).toString()
+        check += (findViewById<Spinner>(R.id.spinner_mode).selectedItemPosition + 1).toString()
+        check += (findViewById<Spinner>(R.id.spinner_water).selectedItemPosition + 1).toString()
+
+        if(!findViewById<EditText>(R.id.name).getText().toString().equals("")) {
+            val database: SQLiteDatabase = mDBHelper!!.getWritableDatabase()
+            val contentValues = ContentValues()
+            contentValues.put("text", findViewById<EditText>(R.id.name).getText().toString())
+            contentValues.put("code", check)
+            database.insert("plant", null, contentValues)
+            findViewById<EditText>(R.id.name).setText("")
+            Toast.makeText(this, "Сохранено", Toast.LENGTH_SHORT).show()
+        }
+
+        else{
+            Toast.makeText(this, "Пустое поле", Toast.LENGTH_SHORT).show()
+        }
     }
 }
