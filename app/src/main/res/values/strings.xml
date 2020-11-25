@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Floristics_app</string>
+    <string name="qr_scanner">QR-Scanner</string>
+</resources>
