@@ -9,7 +9,7 @@
     <TextView
         android:id="@+id/light"
         android:layout_width="240dp"
-        android:layout_height="26dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"
         android:text="TextView"
@@ -21,7 +21,7 @@
     <TextView
         android:id="@+id/max_temp"
         android:layout_width="240dp"
-        android:layout_height="26dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"
         android:text="TextView"
@@ -33,7 +33,7 @@
     <TextView
         android:id="@+id/min_temp"
         android:layout_width="240dp"
-        android:layout_height="26dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"
         android:text="TextView"
@@ -45,7 +45,7 @@
     <TextView
         android:id="@+id/mode"
         android:layout_width="240dp"
-        android:layout_height="26dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"
         android:text="TextView"
@@ -57,7 +57,7 @@
     <TextView
         android:id="@+id/water"
         android:layout_width="240dp"
-        android:layout_height="26dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:text="TextView"
         app:layout_constraintBottom_toBottomOf="parent"
