@@ -48,23 +48,6 @@ class MainActivity : AppCompatActivity() {
         if (!checkPermissionForExternalStorage()) {
             requestPermissionForExternalStorage()
         }
-
-        var cursor = mDb!!.rawQuery("SELECT COUNT(*) FROM plant", null)
-        cursor.moveToFirst()
-        var data = arrayOfNulls<String>(cursor.getInt(0))
-        cursor = mDb!!.rawQuery("SELECT text FROM plant", null)
-        cursor.moveToFirst()
-        var i = 0
-        while (!cursor.isAfterLast) {
-            data[i] = cursor.getString(0)
-            i++
-            cursor.moveToNext()
-        }
-        cursor.close()
-        var adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, data)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        var spinner = findViewById<View>(R.id.spinner_plant) as Spinner
-        spinner.adapter = adapter
     }
 
     fun qrScan(view: View) {
@@ -249,9 +232,7 @@ class MainActivity : AppCompatActivity() {
     var qrImage = net.glxn.qrgen.android.QRCode.from(vCard).bitmap()
     fun generateQRCode(view: View)
     {
-        if(findViewById<LinearLayout>(R.id.layout_vCard).visibility == View.VISIBLE)
-        {
-            vCard = VCard(findViewById<EditText>(R.id.input_name).text.toString())
+            vCard = VCard(findViewById<Spinner>(R.id.input_name).selectedItem.toString())
             /*.setEmail(input_email.text.toString())
             .setAddress(input_address.text.toString())
             .setPhoneNumber(input_phoneNumber.text.toString())
@@ -262,7 +243,6 @@ class MainActivity : AppCompatActivity() {
             {
                 findViewById<ImageView>(R.id.imageView_qrCode).setImageBitmap(qrImage)
             }
-        }
         /*else if(input_text.visibility == View.VISIBLE)
         {
             qrImage = net.glxn.qrgen.android.QRCode.from(input_text.text.toString()).bitmap()
@@ -331,43 +311,21 @@ class MainActivity : AppCompatActivity() {
 
     fun gen(view: View){
         setContentView(R.layout.activity_main)
-    }
-    fun plant_open(view: View){
-        var cursor = mDb!!.rawQuery("SELECT * FROM plant where text ='" + findViewById<Spinner>(R.id.spinner_plant).selectedItem + "'", null)
+        var cursor = mDb!!.rawQuery("SELECT COUNT(*) FROM plant", null)
         cursor.moveToFirst()
-        var plant = cursor.getString(1)
-        setContentView(R.layout.plant)
-        code = plant
-
-        cursor = mDb!!.rawQuery("SELECT code FROM plant WHERE text ='" + code + "'", null)
+        var data = arrayOfNulls<String>(cursor.getInt(0))
+        cursor = mDb!!.rawQuery("SELECT text FROM plant", null)
         cursor.moveToFirst()
-        code = cursor.getString(0)
-
-        setContentView(R.layout.plant)
-        cursor = mDb!!.rawQuery("SELECT * FROM light where _id =" + code[0].toString() + "", null)
-        cursor.moveToFirst()
-        plant = cursor.getString(1)
-        findViewById<TextView>(R.id.light).setText(plant);
-
-        cursor = mDb!!.rawQuery("SELECT * FROM min_temp where _id =" + code[1].toString() + "", null)
-        cursor.moveToFirst()
-        plant = cursor.getString(1)
-        findViewById<TextView>(R.id.min_temp).setText(plant);
-
-        cursor = mDb!!.rawQuery("SELECT * FROM max_temp where _id =" + code[2].toString() + "", null)
-        cursor.moveToFirst()
-        plant = cursor.getString(1)
-        findViewById<TextView>(R.id.max_temp).setText(plant);
-
-        cursor = mDb!!.rawQuery("SELECT * FROM mode where _id =" + code[3].toString() + "", null)
-        cursor.moveToFirst()
-        plant = cursor.getString(1)
-        findViewById<TextView>(R.id.mode).setText(plant);
-
-        cursor = mDb!!.rawQuery("SELECT * FROM water where _id =" + code[4].toString() + "", null)
-        cursor.moveToFirst()
-        plant = cursor.getString(1)
-        findViewById<TextView>(R.id.water).setText(plant);
+        var i = 0
+        while (!cursor.isAfterLast) {
+            data[i] = cursor.getString(0)
+            i++
+            cursor.moveToNext()
+        }
         cursor.close()
+        var adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, data)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        var spinner = findViewById<View>(R.id.input_name) as Spinner
+        spinner.adapter = adapter
     }
 }
