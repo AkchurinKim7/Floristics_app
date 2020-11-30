@@ -10,6 +10,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.view.KeyEvent
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -48,6 +49,7 @@ class MainActivity : AppCompatActivity() {
         if (!checkPermissionForExternalStorage()) {
             requestPermissionForExternalStorage()
         }
+        layout = 1
     }
 
     fun qrScan(view: View) {
@@ -75,11 +77,14 @@ class MainActivity : AppCompatActivity() {
                 var plant = ""
                 code = (result.contents).toString()
 
-                var cursor = mDb!!.rawQuery("SELECT code FROM plant WHERE text ='" + code + "'", null)
+                var cursor = mDb!!.rawQuery("SELECT code, text FROM plant WHERE _id =" + code + "", null)
                 cursor.moveToFirst()
                 code = cursor.getString(0)
-
                 setContentView(R.layout.plant)
+                layout = 2
+
+                findViewById<TextView>(R.id.name_plant).setText(cursor.getString(1));
+
                 cursor = mDb!!.rawQuery("SELECT * FROM light where _id =" + code[0].toString() + "", null)
                 cursor.moveToFirst()
                 plant = cursor.getString(1)
@@ -115,6 +120,7 @@ class MainActivity : AppCompatActivity() {
 
     fun add_plant(view: View){
         setContentView(R.layout.add_plant)
+        layout = 3
         var cursor = mDb!!.rawQuery("SELECT COUNT(*) FROM light", null)
         cursor.moveToFirst()
         var data = arrayOfNulls<String>(cursor.getInt(0))
@@ -232,26 +238,16 @@ class MainActivity : AppCompatActivity() {
     var qrImage = net.glxn.qrgen.android.QRCode.from(vCard).bitmap()
     fun generateQRCode(view: View)
     {
-            vCard = VCard(findViewById<Spinner>(R.id.input_name).selectedItem.toString())
-            /*.setEmail(input_email.text.toString())
-            .setAddress(input_address.text.toString())
-            .setPhoneNumber(input_phoneNumber.text.toString())
-            .setWebsite(input_website.text.toString())*/
-            qrImage =
-                    net.glxn.qrgen.android.QRCode.from(vCard).bitmap()
-            if(qrImage != null)
-            {
-                findViewById<ImageView>(R.id.imageView_qrCode).setImageBitmap(qrImage)
-            }
-        /*else if(input_text.visibility == View.VISIBLE)
+        var flowerStr = findViewById<Spinner>(R.id.input_name).selectedItem.toString()
+        var cursor = mDb!!.rawQuery("SELECT _id FROM plant WHERE text ='" + flowerStr + "'", null)
+        cursor.moveToFirst()
+        code = cursor.getString(0)
+        vCard = VCard(code)
+        qrImage = net.glxn.qrgen.android.QRCode.from(vCard.name).bitmap()
+        if(qrImage != null)
         {
-            qrImage = net.glxn.qrgen.android.QRCode.from(input_text.text.toString()).bitmap()
-            if(qrImage != null)
-            {
-                imageView_qrCode.setImageBitmap(qrImage)
-                btn_save.visibility = View.VISIBLE
-            }
-        }*/
+            findViewById<ImageView>(R.id.imageView_qrCode).setImageBitmap(qrImage)
+        }
     }
     //function for requesting storage access
     fun requestPermissionForExternalStorage() {
@@ -311,6 +307,7 @@ class MainActivity : AppCompatActivity() {
 
     fun gen(view: View){
         setContentView(R.layout.activity_main)
+        layout = 4
         var cursor = mDb!!.rawQuery("SELECT COUNT(*) FROM plant", null)
         cursor.moveToFirst()
         var data = arrayOfNulls<String>(cursor.getInt(0))
@@ -327,5 +324,21 @@ class MainActivity : AppCompatActivity() {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         var spinner = findViewById<View>(R.id.input_name) as Spinner
         spinner.adapter = adapter
+    }
+    var layout = 0
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            when(layout){
+                1 -> android.os.Process.killProcess(android.os.Process.myPid())
+                2 -> {setContentView(R.layout.main)
+                    layout = 1}
+                3 -> {setContentView(R.layout.main)
+                    layout = 1}
+                4 -> {setContentView(R.layout.main)
+                    layout = 1}
+            }
+        }
+        return true
     }
 }
