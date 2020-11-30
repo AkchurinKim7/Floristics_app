@@ -76,6 +76,7 @@ class MainActivity : AppCompatActivity() {
             if (result.contents != null) {
                 var plant = ""
                 code = (result.contents).toString()
+                check = code
 
                 var cursor = mDb!!.rawQuery("SELECT code, text FROM plant WHERE _id =" + code + "", null)
                 cursor.moveToFirst()
@@ -326,7 +327,7 @@ class MainActivity : AppCompatActivity() {
         spinner.adapter = adapter
     }
     var layout = 0
-
+    var check = ""
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             when(layout){
@@ -337,8 +338,40 @@ class MainActivity : AppCompatActivity() {
                     layout = 1}
                 4 -> {setContentView(R.layout.main)
                     layout = 1}
-                5 -> {setContentView(R.layout.plant)
-                    layout = 2}
+                5 -> { setContentView(R.layout.plant)
+                    layout = 2
+
+                    var cursor = mDb!!.rawQuery("SELECT code, text FROM plant WHERE _id =" + check + "", null)
+                    cursor.moveToFirst()
+                    code = cursor.getString(0)
+                    findViewById<TextView>(R.id.name_plant).setText(cursor.getString(1));
+
+                    cursor = mDb!!.rawQuery("SELECT * FROM light where _id =" + code[0].toString() + "", null)
+                    cursor.moveToFirst()
+                    var plant = cursor.getString(1)
+                    findViewById<TextView>(R.id.light).setText(plant);
+
+                    cursor = mDb!!.rawQuery("SELECT * FROM min_temp where _id =" + code[1].toString() + "", null)
+                    cursor.moveToFirst()
+                    plant = cursor.getString(1)
+                    findViewById<TextView>(R.id.min_temp).setText(plant);
+
+                    cursor = mDb!!.rawQuery("SELECT * FROM max_temp where _id =" + code[2].toString() + "", null)
+                    cursor.moveToFirst()
+                    plant = cursor.getString(1)
+                    findViewById<TextView>(R.id.max_temp).setText(plant);
+
+                    cursor = mDb!!.rawQuery("SELECT * FROM mode where _id =" + code[3].toString() + "", null)
+                    cursor.moveToFirst()
+                    plant = cursor.getString(1)
+                    findViewById<TextView>(R.id.mode).setText(plant);
+
+                    cursor = mDb!!.rawQuery("SELECT * FROM water where _id =" + code[4].toString() + "", null)
+                    cursor.moveToFirst()
+                    plant = cursor.getString(1)
+                    findViewById<TextView>(R.id.water).setText(plant);
+                    cursor.close()
+                }
             }
         }
         return true
