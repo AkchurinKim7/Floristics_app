@@ -337,8 +337,15 @@ class MainActivity : AppCompatActivity() {
                     layout = 1}
                 4 -> {setContentView(R.layout.main)
                     layout = 1}
+                5 -> {setContentView(R.layout.plant)
+                    layout = 2}
             }
         }
         return true
+    }
+
+    fun common(view:View){
+        setContentView(R.layout.common)
+        layout = 5
     }
 }

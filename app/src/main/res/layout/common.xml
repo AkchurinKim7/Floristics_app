@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/common"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="- Большинство комнатных растений размещают ближе к свету.\n- Поливают растения отстоявшейся водой комнатной температуры. Летом поливают ежедневно вечером, зимой — реже и по утрам. Лейку держат сбоку, чтобы струя воды не вымывала почву.\n- Рыхлят палочкой поверхность почвы в горшочке, чтобы к корням поступал воздух. Рыхлить надо осторожно, чтобы не повредить корни растения.\n- Вытирают пыль с листьев влажной тряпкой, губкой или кисточкой.\n- Растения регулярно опрыскивают водой комнатной температуры.\n- Осторожно срезают с растений сухие листья и веточки. Следят за чистотой цветочных горшков и подставок.\n- Растения регулярно подкармливают удобрениями." />
+        </LinearLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
