@@ -16,7 +16,6 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.view.get
 import com.example.prototype.DatabaseHelper
 import com.google.zxing.integration.android.IntentIntegrator
 import net.glxn.qrgen.core.scheme.VCard
@@ -81,7 +80,7 @@ class MainActivity : AppCompatActivity() {
                 var cursor = mDb!!.rawQuery("SELECT code, text FROM plant WHERE _id =" + code + "", null)
                 cursor.moveToFirst()
                 code = cursor.getString(0)
-                setContentView(R.layout.plant)
+                setContentView(R.layout.plant_info)
                 layout = 2
 
                 findViewById<TextView>(R.id.name_plant).setText(cursor.getString(1));
@@ -307,7 +306,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun gen(view: View){
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.generate_qr)
         layout = 4
         var cursor = mDb!!.rawQuery("SELECT COUNT(*) FROM plant", null)
         cursor.moveToFirst()
@@ -338,7 +337,7 @@ class MainActivity : AppCompatActivity() {
                     layout = 1}
                 4 -> {setContentView(R.layout.main)
                     layout = 1}
-                5 -> { setContentView(R.layout.plant)
+                5 -> { setContentView(R.layout.plant_info)
                     layout = 2
 
                     var cursor = mDb!!.rawQuery("SELECT code, text FROM plant WHERE _id =" + check + "", null)
@@ -378,7 +377,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun common(view:View){
-        setContentView(R.layout.common)
+        setContentView(R.layout.common_info)
         layout = 5
     }
 }
